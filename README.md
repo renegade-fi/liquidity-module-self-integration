@@ -18,25 +18,23 @@ A GlueX Liquidity Module is a standardized Python-based integration that allows 
 
 Each liquidity module follows a strict interface, ensuring GlueX can efficiently interact with all integrated protocols.
 
+
 ---
 
-gluex-liquidity-module-self-integration/
-│── modules/                          # Liquidity module implementations
-│   ├── myprotocol_liquidity_module.py # Example protocol integration
-│
-│── templates/                         # Base template and abstract class
-│   ├── liquidity_module.py            # Abstract LiquidityModule class (Do Not Modify)
-│
-│── tests/                              # Test suite
-│   ├── test_liquidity_module.py        # Unit tests
-│
-│── docs/                               # Documentation and PR guidelines
-│   ├── PR-template.md                  # PR submission guidelines
-│
-│── README.md                           # This file
-│── requirements.txt                    # Dependencies (if any)
-│── pytest.ini                          # Testing configuration
 
+## Directory Descriptions
+- **`modules/`** → Contains individual liquidity module implementations for each protocol.
+- **`templates/`** → Holds the base `LiquidityModule` class, which should not be modified.
+- **`tests/`** → Contains test cases to validate the implementation of liquidity modules.
+- **`docs/`** → Includes specifications, guidelines, and PR submission templates.
+- **`README.md`** → The main guide for self-integration.
+- **`requirements.txt`** → Lists dependencies required for running the module.
+- **`pytest.ini`** → Configuration file for running test cases.
+
+Make sure to place your implementation inside the `modules/` directory following the naming convention:
+
+
+---
 
 
 ## How to Submit a Liquidity Module
