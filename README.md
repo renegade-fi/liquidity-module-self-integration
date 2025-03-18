@@ -37,7 +37,7 @@ gluex-liquidity-module-self-integration/
 │── requirements.txt                    # Dependencies (if any)
 │── pytest.ini                          # Testing configuration
 
----
+
 
 ## How to Submit a Liquidity Module
 
@@ -45,7 +45,7 @@ gluex-liquidity-module-self-integration/
 
 Click the "Fork" button at the top of this repo to create your own copy.
 
----
+
 
 ### 2. Implement the Required Python Interfaces
 
@@ -95,7 +95,7 @@ class MyProtocolLiquidityModule(LiquidityModule):
         pass
 ```
 
----
+
 
 
 ### 3. Test Your Integration
@@ -107,7 +107,7 @@ class MyProtocolLiquidityModule(LiquidityModule):
 pytest tests/
 ```
 
----
+
 
 ### 4. Submit a Pull Request (PR)
 
@@ -133,7 +133,7 @@ To submit a PR:
 
 Right after the PR is submitted, a Gluer will review the submission. If any modifications are required, you will receive feedback for adjustments. If approved, your protocol will be integrated into GlueX’s execution network.
 
----
+
 
 ## Checklist  
 Before submitting, ensure you have completed the following:  
@@ -147,7 +147,7 @@ Before submitting, ensure you have completed the following:
 - [ ] Listed all chains in which your liquidity module is available
 - [ ] Listed all smart contracts that are relevant to index your liquidity pools (e.g. factories)
 
----
+
 
 ## Relevant Links
 - **Telegram:** https://t.me/+yf_US2ACNrgyNzY0
