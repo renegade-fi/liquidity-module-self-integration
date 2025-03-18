@@ -1,2 +1,156 @@
-# liquidity-module-self-integration
-This repository provides the official framework for DeFi protocols to self-integrate into GlueX by submitting their own liquidity modules.
+# gluex-liquidity-module-self-integration
+
+## Welcome to the GlueX Liquidity Module Self-Integration Repository
+
+This repository provides the official framework for DeFi protocols to self-integrate into GlueX by submitting their own liquidity modules in Python.
+
+By integrating, your protocol will be natively accessible to GlueX-connected chains, dApps, and solvers, enabling seamless execution abstraction without requiring custom infrastructure or manual onboarding.
+
+---
+
+## What is a GlueX Liquidity Module?
+
+A GlueX Liquidity Module is a standardized Python-based integration that allows GlueX to:
+
+- Retrieve liquidity from your protocol and expose it to DeFi dApps and execution optimizers.
+- Embed your protocol into multi-step transactions spanning chains and liquidity sources.
+- Standardize interaction formats for efficient routing and settlement.
+
+Each liquidity module follows a strict interface, ensuring GlueX can efficiently interact with all integrated protocols.
+
+---
+
+gluex-liquidity-module-self-integration/
+│── modules/                          # Liquidity module implementations
+│   ├── myprotocol_liquidity_module.py # Example protocol integration
+│
+│── templates/                         # Base template and abstract class
+│   ├── liquidity_module.py            # Abstract LiquidityModule class (Do Not Modify)
+│
+│── tests/                              # Test suite
+│   ├── test_liquidity_module.py        # Unit tests
+│
+│── docs/                               # Documentation and PR guidelines
+│   ├── PR-template.md                  # PR submission guidelines
+│
+│── README.md                           # This file
+│── requirements.txt                    # Dependencies (if any)
+│── pytest.ini                          # Testing configuration
+
+---
+
+## How to Submit a Liquidity Module
+
+### 1. Fork This Repository
+
+Click the "Fork" button at the top of this repo to create your own copy.
+
+---
+
+### 2. Implement the Required Python Interfaces
+
+- **Do not modify** `templates/liquidity_module.py`. This file contains the abstract base class that your implementation should inherit from.
+- Navigate to the `modules/` directory.
+- Create a new file named `<protocol_name>_liquidity_module.py`.
+- Implement your protocol’s integration by inheriting from `LiquidityModule`.
+
+Your implementation **must** inherit from `LiquidityModule` and implement all required methods.
+
+Example (`modules/myprotocol_liquidity_module.py`):
+
+```python
+from templates.liquidity_module import LiquidityModule, Token
+from typing import Dict, Optional
+from decimal import Decimal
+
+class MyProtocolLiquidityModule(LiquidityModule):
+    def get_amount_out(
+        self, 
+        pool_state: Dict, 
+        input_token: Token, 
+        input_amount: int, 
+        output_token: Token, 
+        output_amount: Optional[int] = None
+    ) -> int:
+        # Implement logic to calculate output amount
+        pass
+
+    def get_amount_in(
+        self, 
+        pool_state: Dict, 
+        input_token: Token, 
+        input_amount: Optional[int] = None, 
+        output_token: Token, 
+        output_amount: int
+    ) -> int:
+        # Implement logic to calculate required input amount
+        pass
+
+    def get_apy(self, pool_state: Dict) -> Decimal:
+        # Implement APY calculation logic
+        pass
+
+    def get_tvl(self, pool_state: Dict, token: Optional[Token] = None) -> Decimal:
+        # Implement TVL calculation logic
+        pass
+```
+
+---
+
+
+### 3. Test Your Integration
+
+- Run the provided test suite (`tests/test_liquidity_module.py`) to ensure compatibility.
+- Use the GlueX Self-Integration Sandbox to simulate transactions and verify execution.
+
+```bash
+pytest tests/
+```
+
+---
+
+### 4. Submit a Pull Request (PR)
+
+Once your module is complete and tested, submit a PR following the required format.
+
+Your PR must include:
+- Protocol name and details
+- Deployed chains
+- Relevant smart contract addresses for indexing (e.g. factories)
+- Relevant pool states and pool state retrieval instructions
+
+Follow the PR template in `/docs/PR-template.md`.
+
+To submit a PR:
+1. Push your implementation to your forked repository.
+2. Open a Pull Request (PR) to this repository.
+3. In the PR description, include:
+   - Protocol overview
+   - A summary of your liquidity module implementation
+   - Test results and relevant logs
+   - Any special considerations for execution or integration
+4. Wait for a GlueX reviewer to assess your submission.
+
+Right after the PR is submitted, a Gluer will review the submission. If any modifications are required, you will receive feedback for adjustments. If approved, your protocol will be integrated into GlueX’s execution network.
+
+---
+
+## Checklist  
+Before submitting, ensure you have completed the following:  
+
+- [ ] Forked this repository  
+- [ ] Implemented a new liquidity module in `modules/<protocol_name>_liquidity_module.py`  
+- [ ] Passed all test cases (`pytest tests/`)  
+- [ ] Provided clear documentation in this PR  
+- [ ] Included test logs and results in this PR  
+- [ ] Listed all dependencies and external data sources (if any)  
+- [ ] Listed all chains in which your liquidity module is available
+- [ ] Listed all smart contracts that are relevant to index your liquidity pools (e.g. factories)
+
+---
+
+## Relevant Links
+- **Telegram:** https://t.me/+yf_US2ACNrgyNzY0
+- **GlueX Website:** https://gluex.xyz
+- **GlueX dApp:** https://dapp.gluex.xyz
+- **GlueX Docs:** https://docs.gluex.xyz
