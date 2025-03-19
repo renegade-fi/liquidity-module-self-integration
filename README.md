@@ -21,7 +21,7 @@ Each liquidity module follows a strict interface, ensuring GlueX can efficiently
 ---
 
 ## **Glueing Queue – Automatic & Community-Powered Integration**
-Protocols that do not wish to self-integrate can be picked up by the GlueX ecosystem or the GlueX Labs team through the Glueing Queue.
+Protocols that do not wish to self-integrate can be picked up by the GlueX's Gluers Community or the GlueX Labs team through the Glueing Queue.
 
 **What is the Glueing Queue?**
 
