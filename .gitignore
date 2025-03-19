@@ -172,3 +172,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# GlueX specific
+otex/
+.vscode/
+.DS_Store
+*.ico
+*.ipynb
+__init__.py
+Icon
