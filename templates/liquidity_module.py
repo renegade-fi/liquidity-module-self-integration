@@ -15,7 +15,7 @@ class Token:
         self.address = address
         self.symbol = symbol
         self.decimals = decimals
-        self.reference_price = reference_price  # Relative to the blockchain's native token (e.g., ETH, BNB)
+        self.reference_price = reference_price
 
 
 class LiquidityModule(ABC):
@@ -26,43 +26,43 @@ class LiquidityModule(ABC):
 
     @abstractmethod
     def get_amount_out(
-        self,
-        pool_state: Dict,
-        input_token: Token,
-        input_amount: int,
+        self, 
+        pool_state: Dict, 
+        fixed_parameters: Dict,
+        input_token: Token, 
         output_token: Token,
-        output_amount: Optional[int] = None
-    ) -> int:
+        input_amount: int, 
+    ) -> tuple[int | None, int | None]:
         """
         Computes the amount of output token a user would receive when providing `input_amount` of `input_token`.
 
         :param pool_state: A dictionary representing the state of the liquidity pool.
+        :param fixed_parameters: A dictionary of fixed parameters for the liquidity module.
         :param input_token: The token being swapped in.
-        :param input_amount: The amount of input_token being provided.
         :param output_token: The token being swapped out.
-        :param output_amount: Optional, used when an exact output is required instead of input.
-        :return: The amount of output_token that would be received.
+        :param input_amount: The amount of input_token being provided.
+        :return: The fee amount (integer or None type) in terms of input token and the amount of output_token (integer or None type) that would be received by the user. 
         """
         pass
 
     @abstractmethod
     def get_amount_in(
-        self,
-        pool_state: Dict,
+        self, 
+        pool_state: Dict, 
+        fixed_parameters: Dict,
         input_token: Token,
-        input_amount: Optional[int] = None,
         output_token: Token,
         output_amount: int
-    ) -> int:
+    ) -> tuple[int | None, int | None]:
         """
         Computes the amount of input token required to receive `output_amount` of `output_token`.
 
         :param pool_state: A dictionary representing the state of the liquidity pool.
+        :param fixed_parameters: A dictionary of fixed parameters for the liquidity module.
         :param input_token: The token being swapped in.
-        :param input_amount: Optional, used when an exact input is required instead of output.
         :param output_token: The token being swapped out.
         :param output_amount: The amount of output_token desired.
-        :return: The amount of input_token needed.
+        :return: The fee amount (integer or None type) in terms of input token and the amount of input_token (integer or None type) required to receive the desired output amount.
         """
         pass
 

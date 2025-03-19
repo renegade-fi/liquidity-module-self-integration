@@ -6,23 +6,23 @@ class MyProtocolLiquidityModule(LiquidityModule):
     def get_amount_out(
         self, 
         pool_state: Dict, 
+        fixed_parameters: Dict,
         input_token: Token, 
+        output_token: Token,
         input_amount: int, 
-        output_token: Token, 
-        output_amount: Optional[int] = None
-    ) -> int:
-        # Implement logic to calculate output amount
+    ) -> tuple[int | None, int | None]:
+        # Implement logic to calculate output amount given input amount
         pass
 
     def get_amount_in(
         self, 
         pool_state: Dict, 
-        input_token: Token, 
-        input_amount: Optional[int] = None, 
-        output_token: Token, 
+        fixed_parameters: Dict,
+        input_token: Token,
+        output_token: Token,
         output_amount: int
-    ) -> int:
-        # Implement logic to calculate required input amount
+    ) -> tuple[int | None, int | None]:
+        # Implement logic to calculate required input amount given output amount
         pass
 
     def get_apy(self, pool_state: Dict) -> Decimal:
