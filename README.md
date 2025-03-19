@@ -20,10 +20,13 @@ Each liquidity module follows a strict interface, ensuring GlueX can efficiently
 
 ---
 
-### **Glueing Queue – Automatic & Community-Powered Integration**
+## **Glueing Queue – Automatic & Community-Powered Integration**
 Protocols that do not wish to self-integrate can be picked up by the GlueX ecosystem or the GlueX Labs team through the Glueing Queue.
 
 **What is the Glueing Queue?**
+
+<br>
+
 The Glueing Queue is the official order in which liquidity modules are integrated. The queue prioritizes integrations based on the Glueing Score. However, Gluers can be incentivized to integrate liquidity modules that are not at the top of the Glueing Queue via Glueing Bounties. Read more about the Glueing Queue, the Glueing Score and Glueing Bounties [here](https://github.com/gluexprotocol/glueing-queue/tree/main).
 
 ---
