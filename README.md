@@ -43,6 +43,10 @@ Make sure to place your implementation inside the `modules/` directory following
 
 ---
 
+> **NOTE**  
+> Before you start working on your liquidity module integration, please ensure your liquidity module has not already been glued to GlueX.  
+>
+> The latest list of integrated protocols is available here: [GlueX Integrated Liquidity](https://router.gluex.xyz/liquidity/staging).
 
 ## How to Submit a Liquidity Module
 

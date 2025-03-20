@@ -5,7 +5,7 @@ from decimal import Decimal
 class MyProtocolLiquidityModule(LiquidityModule):
     def get_amount_out(
         self, 
-        pool_state: Dict, 
+        pool_states: Dict, 
         fixed_parameters: Dict,
         input_token: Token, 
         output_token: Token,
