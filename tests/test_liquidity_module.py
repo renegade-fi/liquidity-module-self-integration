@@ -158,7 +158,7 @@ async def test_get_amount_out__buy_side(usdc_token, weth_token, make_renegade_li
     fixed_parameters = {}
 
     input_token, output_token, input_amount = usdc_token, weth_token, QUOTE_AMOUNT
-    fee, amount_out = await renegade_liquidity_module.get_sell_quote(fixed_parameters, input_token, output_token, input_amount)
+    fee, amount_out, _quote = await renegade_liquidity_module.get_sell_quote(fixed_parameters, input_token, output_token, input_amount)
 
     assert fee == 0
     assert amount_out == BASE_AMOUNT
@@ -170,7 +170,7 @@ async def test_get_amount_out__sell_side(usdc_token, weth_token, make_renegade_l
     fixed_parameters = {}
 
     input_token, output_token, input_amount = weth_token, usdc_token, BASE_AMOUNT
-    fee, amount_out = await renegade_liquidity_module.get_sell_quote(fixed_parameters, input_token, output_token, input_amount)
+    fee, amount_out, _quote = await renegade_liquidity_module.get_sell_quote(fixed_parameters, input_token, output_token, input_amount)
 
     assert fee == 0
     assert amount_out == QUOTE_AMOUNT
@@ -182,7 +182,7 @@ async def test_get_amount_in__buy_side(usdc_token, weth_token, make_renegade_liq
     fixed_parameters = {}
 
     input_token, output_token, output_amount = usdc_token, weth_token, BASE_AMOUNT
-    fee, amount_in = await renegade_liquidity_module.get_buy_quote(fixed_parameters, input_token, output_token, output_amount)
+    fee, amount_in, _quote = await renegade_liquidity_module.get_buy_quote(fixed_parameters, input_token, output_token, output_amount)
 
     assert fee == 0
     assert amount_in == QUOTE_AMOUNT
@@ -194,7 +194,7 @@ async def test_get_amount_in__sell_side(usdc_token, weth_token, make_renegade_li
     fixed_parameters = {}
 
     input_token, output_token, output_amount = weth_token, usdc_token, QUOTE_AMOUNT
-    fee, amount_in = await renegade_liquidity_module.get_buy_quote(fixed_parameters, input_token, output_token, output_amount)
+    fee, amount_in, _quote = await renegade_liquidity_module.get_buy_quote(fixed_parameters, input_token, output_token, output_amount)
 
     assert fee == 0
     assert amount_in == BASE_AMOUNT
@@ -208,7 +208,7 @@ async def test_non_usdc_pair(weth_token, make_renegade_liquidity_module):
 
     input_token, input_amount = weth_token, BASE_AMOUNT
     output_token = Token(address="0x123", symbol="TEST", decimals=18, reference_price=Decimal("1"))
-    fee, amount_out = await renegade_liquidity_module.get_sell_quote(fixed_parameters, input_token, output_token, input_amount)
+    fee, amount_out, _quote = await renegade_liquidity_module.get_sell_quote(fixed_parameters, input_token, output_token, input_amount)
 
     assert fee is None
     assert amount_out is None
@@ -220,7 +220,7 @@ async def test_no_quote_available(usdc_token, weth_token, make_renegade_liquidit
     fixed_parameters = {}
 
     input_token, output_token, input_amount = weth_token, usdc_token, BASE_AMOUNT
-    fee, amount_out = await renegade_liquidity_module.get_sell_quote(fixed_parameters, input_token, output_token, input_amount)
+    fee, amount_out, _quote = await renegade_liquidity_module.get_sell_quote(fixed_parameters, input_token, output_token, input_amount)
 
     assert fee is None
     assert amount_out is None

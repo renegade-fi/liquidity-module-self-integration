@@ -4,7 +4,7 @@ from templates.liquidity_module import Token
 from typing import Dict
 from enum import Enum
 
-from renegade import ExternalMatchClient
+from renegade import ExternalMatchClient, SignedExternalQuote
 from renegade.types import OrderSide, ExternalOrder
 
 # Constant annotating that a fee is not taken out of the input token
@@ -23,7 +23,7 @@ class RenegadeLiquidityModule:
         output_token: Token,
         input_amount: int, 
         _block: Literal['latest', int] = 'latest'
-    ) -> tuple[int | None, int | None]:
+    ) -> tuple[int | None, int | None, SignedExternalQuote | None]:
         """
         Computes the amount of output token a user would receive when providing `input_amount` of `input_token`.
 
@@ -37,7 +37,7 @@ class RenegadeLiquidityModule:
         # Validate the input pair
         valid_pair = self._validate_pair(input_token, output_token)
         if not valid_pair:
-            return None, None
+            return None, None, None
 
         # Fetch a quote
         client = self._get_client(fixed_parameters)
@@ -46,15 +46,15 @@ class RenegadeLiquidityModule:
             signed_quote = await client.request_quote(order)
         except Exception as e:
             print(f"Error fetching Renegade quote: {e}")
-            return None, None
+            return None, None, None
         
         # If the quote is not found, return None
         if not signed_quote:
-            return None, None
+            return None, None, None
         
         # Fees are taken out of the receive amount, so the input token fee is zero
         # The output token amount on the quote accounts for this fee
-        return NO_INPUT_FEE, signed_quote.quote.receive.amount
+        return NO_INPUT_FEE, signed_quote.quote.receive.amount, signed_quote
     
     async def get_buy_quote(
         self, 
@@ -63,7 +63,7 @@ class RenegadeLiquidityModule:
         output_token: Token,
         output_amount: int, 
         _block: Literal['latest', int] = 'latest'
-    ) -> tuple[int | None, int | None]:
+    ) -> tuple[int | None, int | None, SignedExternalQuote | None]:
         """
         Computes the amount of input token a user would need to provide to receive `output_amount` of `output_token`.
 
@@ -84,15 +84,15 @@ class RenegadeLiquidityModule:
             signed_quote = await client.request_quote(order)
         except Exception as e:
             print(f"Error fetching Renegade quote: {e}")
-            return None, None
+            return None, None, None
 
         # If the quote is not found, return None
         if not signed_quote:
-            return None, None
+            return None, None, None
         
         # Fees are taken out of the receive amount, so the input token fee is zero
         # The output token amount on the quote accounts for this fee
-        return NO_INPUT_FEE, signed_quote.quote.send.amount
+        return NO_INPUT_FEE, signed_quote.quote.send.amount, signed_quote
 
     # --- Private Helpers --- #
 
