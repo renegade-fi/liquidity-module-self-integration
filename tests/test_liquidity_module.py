@@ -97,7 +97,41 @@ def make_quote_response():
     return _make_quote_response
 
 @pytest.fixture
-def mock_http_client(make_quote_response):
+def make_assemble_response():
+    """Factory fixture that creates assemble responses for a given side."""
+    def _make_assemble_response(side: str):
+        bundle = {
+            "match_result": {
+                "quote_mint": USDC_ADDRESS,
+                "base_mint": WETH_ADDRESS,
+                "quote_amount": QUOTE_AMOUNT,
+                "base_amount": BASE_AMOUNT,
+                "direction": side
+            },
+            "fees": {
+                "relayer_fee": 0,
+                "protocol_fee": 0
+            },
+            "send": {
+                "mint": USDC_ADDRESS if side == "Buy" else WETH_ADDRESS,
+                "amount": QUOTE_AMOUNT if side == "Buy" else BASE_AMOUNT
+            },
+            "receive": {
+                "mint": WETH_ADDRESS if side == "Buy" else USDC_ADDRESS,
+                "amount": BASE_AMOUNT if side == "Buy" else QUOTE_AMOUNT
+            },
+            "settlement_tx": {
+                "data": "0x123456789abcdef",
+                "to": "0xdef0123456789abcdef0123456789abcdef0123",
+                "value": "0",
+            }
+        }
+
+        return { "match_bundle": bundle }
+    return _make_assemble_response
+
+@pytest.fixture
+def mock_http_client(make_quote_response, make_assemble_response):
     """Fixture that provides a mocked RelayerHttpClient with endpoint-specific responses."""
     def _make_client(side: str, return_none: bool = False):
         with patch('renegade.http.RelayerHttpClient') as mock_client:
@@ -118,7 +152,7 @@ def mock_http_client(make_quote_response):
                 if path.startswith(QUOTE_ENDPOINT):
                     response.json.return_value = make_quote_response(side)
                 elif path.startswith(ASSEMBLE_ENDPOINT):
-                    response.json.return_value = {}  # TODO: Implement assemble response
+                    response.json.return_value = make_assemble_response(side)
                 else:
                     raise ValueError(f"Unexpected endpoint: {path}")
                 
@@ -224,4 +258,24 @@ async def test_no_quote_available(usdc_token, weth_token, make_renegade_liquidit
 
     assert fee is None
     assert amount_out is None
+
+@pytest.mark.asyncio
+async def test_assemble_quote(usdc_token, weth_token, make_renegade_liquidity_module):
+    """Test the assemble_quote method of the RenegadeLiquidityModule."""
+    # Create the module with Buy side
+    renegade_liquidity_module = make_renegade_liquidity_module("Buy")
+    fixed_parameters = {}
+
+    # First get a quote
+    input_token, output_token, input_amount = usdc_token, weth_token, QUOTE_AMOUNT
+    fee, amount_out, quote = await renegade_liquidity_module.get_sell_quote(
+        fixed_parameters, input_token, output_token, input_amount
+    )
+    assert amount_out == BASE_AMOUNT
+    
+    # Assemble the quote into calldata
+    fee, amount, bundle = await renegade_liquidity_module.assemble_quote(fixed_parameters, quote)
+    assert fee == 0
+    assert amount == BASE_AMOUNT
+    assert bundle is not None
 

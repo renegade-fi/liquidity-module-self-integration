@@ -4,7 +4,7 @@ from templates.liquidity_module import Token
 from typing import Dict
 from enum import Enum
 
-from renegade import ExternalMatchClient, SignedExternalQuote
+from renegade import AtomicMatchApiBundle, ExternalMatchClient, SignedExternalQuote
 from renegade.types import OrderSide, ExternalOrder
 
 # Constant annotating that a fee is not taken out of the input token
@@ -31,8 +31,9 @@ class RenegadeLiquidityModule:
         :param input_token: The token being swapped in.
         :param output_token: The token being swapped out.
         :param input_amount: The amount of input_token being provided.
-        :return: The fee amount (integer or None type) in terms of input token and the 
-        amount of output_token (integer or None type) that would be received by the user. 
+        :return: The fee amount (integer or None type) in terms of input token, the 
+        amount of output_token (integer or None type) that would be received by the user, 
+        and the signed quote which can be assembled into a bundle. 
         """
         # Validate the input pair
         valid_pair = self._validate_pair(input_token, output_token)
@@ -71,7 +72,9 @@ class RenegadeLiquidityModule:
         :param input_token: The token being swapped in.
         :param output_token: The token being swapped out.
         :param output_amount: The amount of output_token desired.
-        :return: The fee amount (integer or None type) in terms of input token and the amount of input_token (integer or None type) required to receive the desired output amount.
+        :return: The fee amount (integer or None type) in terms of input token, the 
+        amount of input_token (integer or None type) required to receive the desired 
+        output amount, and the signed quote which can be assembled into a bundle.
         """
         # Validate the input pair
         valid_pair = self._validate_pair(input_token, output_token)
@@ -93,6 +96,34 @@ class RenegadeLiquidityModule:
         # Fees are taken out of the receive amount, so the input token fee is zero
         # The output token amount on the quote accounts for this fee
         return NO_INPUT_FEE, signed_quote.quote.send.amount, signed_quote
+
+    async def assemble_quote(
+        self,
+        fixed_parameters: Dict,
+        quote: SignedExternalQuote,
+    ) -> tuple[int | None, int | None, AtomicMatchApiBundle | None]:
+        """
+        Assembles a quote into an AtomicMatchApiBundle.
+
+        :param fixed_parameters: A dictionary of fixed parameters for the liquidity module.
+        :param quote: The signed quote to assemble.
+        :return: The fee amount (integer or None type), the amount (integer or None type),
+        and the AtomicMatchApiBundle (or None type) that can be used for execution.
+        """
+        client = self._get_client(fixed_parameters)
+        try:
+            atomic_bundle = await client.assemble_quote(quote)
+        except Exception as e:
+            print(f"Error assembling quote: {e}")
+            return None, None, None
+
+        # If a bundle cannot be assembled, return None
+        if not atomic_bundle:
+            return None, None, None
+
+        # Fees are taken out of the receive amount, so the input token fee is zero
+        # The output token amount on the quote accounts for this fee
+        return NO_INPUT_FEE, atomic_bundle.match_bundle.receive.amount, atomic_bundle
 
     # --- Private Helpers --- #
 
