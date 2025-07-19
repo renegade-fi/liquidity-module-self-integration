@@ -1,0 +1,16 @@
+[project]
+name = "liquidity-module-self-integration"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.28.0",
+    "pydantic>=2.0.0", 
+    "web3>=7.0.0",
+    "typing-extensions>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.23.0",
+]
